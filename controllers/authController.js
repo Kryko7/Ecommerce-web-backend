@@ -1,5 +1,6 @@
 const express = require("express");
 const session = require('express-session');
+const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
@@ -16,7 +17,9 @@ router.post('/signin', (req, res) => {
         if(result.length > 0){
             // create a session for the user
             req.session.email = email;
-            res.send({message: 'Success'});
+            const token = jwt.sign({email: email, isAdmin: result[0].role === 'admin'}, 'secret', {expiresIn: '1h'});
+            //res.cookie('auth_token',token);
+            res.send({message: 'Success', token: token});
         } else {
             res.send({message: 'Wrong email/password combination'});
         }
@@ -31,13 +34,45 @@ router.post('/signup', (req, res) => {
         if(result.length > 0){
             res.send({message: 'Email already in use'});
         } else {
-            connection.query('INSERT INTO user (first_name, last_name, email_address, password, lane_address, city, telephone_number) VALUES (?,?,?,?,?,?,?)', [firstName, lastName, email, password, laneAddress, city, telephoneNumber], (err, result) => {
+            connection.query('INSERT INTO user (`email_address`, `password`, `first_name`, `last_name`, `phone_number`, `address`, `City`) VALUES (?,?,?,?,?,?,?)', [email, password, firstName, lastName, telephoneNumber, laneAddress, city], (err, result) => {
                 if (err) throw err;
                 res.send({message: 'Success'});
 
             });
 
         }
+    });
+});
+
+
+router.get('/verify-token', (req, res) => {
+    const authorizationHeader = req.headers['authorization'];
+    if(!authorizationHeader){
+        return res.status(401).json({
+            success: false,
+            message: 'Unauthorized',
+        });
+    }
+    const parts = authorizationHeader.split(' ');
+    if(parts.length !== 2){
+        return res.status(401).json({
+            success: false,
+            message: 'Unauthorized',
+        });
+    }
+    const token = parts[1];
+
+    jwt.verify(token, 'secret', (err, decoded) => {
+        if(err){
+            return res.status(401).json({
+                success: false,
+                message: 'Unauthorized',
+            });
+        }
+        return res.json({
+            success: true,
+            isAdmin: decoded.isAdmin,
+        });
     });
 });
 
