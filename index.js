@@ -29,7 +29,7 @@ app.use("/api/auth", authController);
 
 app.use("/api/report", reportController)
 
-//app.use("/api/order", orderController);
+app.use("/api/order", orderController);
 
 // app.get("/", (req, res) => {
 //     connection.query("SELECT * FROM product_item", (err, result) => {
