@@ -79,18 +79,31 @@ router.get("/most-ordered-category", (req, res) => {
   
 
 router.get("/most-interest-period", (req, res) => {
-    const { product_id } = req.body;
-    // connection.query("SELECT * FROM sales WHERE product_id = ?", [product_id], (err, result) => {
-    //     if (err) throw err;
-    //     res.send(result, );
+    //const { product_id } = req.query;
+    connection.query(`SELECT pi.product_item_id, pi.product_name as product_name, SUM(oi.quantity) as num_sales, 
+                        YEAR(o.order_date) as year, MONTH(o.order_date) as month, 
+                        QUARTER(o.order_date) as quarter
+                    FROM shop_order o
+                    JOIN order_item oi ON o.order_id = oi.order_id
+                    JOIN product_item pi ON oi.product_item_id = pi.product_item_id
+                    GROUP BY pi.product_item_id, year, month, quarter
+                    ORDER BY year DESC, month DESC, quarter DESC, num_sales desc ` , (err, result) => {
+                    //, [product_id], (err, result) => {
+        if (err) throw err;
+        res.send(result, );
+    });
 });
 
 router.get("/customer-order-report", (req, res) => {
-    const { customer_id } = req.body;
+    const { customer_id } = req.query;
+    connection.query(`SELECT * FROM shop_order WHERE user_id = ?`, [customer_id], (err, result) => {
+        if (err) throw err;
+        res.send(result, );
+    });
+});
     // connection.query("SELECT * FROM sales WHERE customer_id = ?", [customer_id], (err, result) => {
     //     if (err) throw err;
     //     res.send(result, );
-});
 
 
 module.exports = router;

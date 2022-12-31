@@ -8,6 +8,7 @@ const session = require('express-session');
 var UIController = require("./controllers/UIController");
 var authController = require("./controllers/authController");
 var reportController = require("./controllers/reportController");
+var orderController = require("./controllers/orderController");
 
 app.use(cors({
     origin: 'http://localhost:3000',
@@ -27,6 +28,8 @@ app.use("/api/ui", UIController);
 app.use("/api/auth", authController);
 
 app.use("/api/report", reportController)
+
+//app.use("/api/order", orderController);
 
 // app.get("/", (req, res) => {
 //     connection.query("SELECT * FROM product_item", (err, result) => {

@@ -19,7 +19,7 @@ router.post('/signin', (req, res) => {
             req.session.email = email;
             const token = jwt.sign({email: email, isAdmin: result[0].role === 'admin'}, 'secret', {expiresIn: '1h'});
             //res.cookie('auth_token',token);
-            res.send({message: 'Success', token: token});
+            res.send({message: 'Success', token: token, result: result});
         } else {
             res.send({message: 'Wrong email/password combination'});
         }
