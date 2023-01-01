@@ -26,6 +26,21 @@ router.post('/signin', (req, res) => {
     });
 });
 
+router.get('/signout', (req, res) => {
+    if (req.session.email) {
+        try {
+            req.session.destroy();
+            res.send({message: 'Success'});
+        }
+        catch(err) {
+            res.send({message: 'Error'});
+        }
+    }
+    else {
+        res.send({message: 'No session'});
+    }
+    
+});
 
 router.post('/signup', (req, res) => {
     const { firstName, lastName, email, password, laneAddress, city, telephoneNumber } = req.body;
