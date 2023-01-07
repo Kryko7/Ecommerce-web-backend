@@ -43,26 +43,6 @@ router.post('/town', (req, res) => {
 });
 
 
-// router.post('/stock-check', (req, res) => {
-//     cart = req.body;
-//     var inStock = true;
-//     for (let i = 0; i < cart.length; i++) {
-//         connection.query("SELECT quantity FROM product_item WHERE product_item_id = ?", [cart[i].product_item_id], (err, result) => {
-//             if (err) throw err;
-//             console.log(result[0].quantity);
-//             if (cart[i].quantity > result[0].quantity) {
-//                 console.log(cart[i].quantity);
-//                 console.log(result[0].quantity);
-            
-//                 inStock = false;
-//                 console.log(inStock);
-//             }
-//         });
-//     }
-//     console.log(inStock);
-//     res.send({ inStock });
-
-// })
 
 router.post('/stock-check', (req, res) => {
     cart = req.body;

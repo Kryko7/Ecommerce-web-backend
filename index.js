@@ -34,19 +34,7 @@ app.use("/api/order", orderController);
 
 app.use("/api/delivery", deliveryController);
 
-// app.get("/", (req, res) => {
-//     connection.query("SELECT * FROM product_item", (err, result) => {
-//         if (err) throw err;
-//         res.send(result, );
-//     }); 
-// });
 
-// app.get("/test", (req, res) => {
-//     connection.query("SELECT * FROM product where category_id=3", (err, result) => {
-//         if (err) throw err;
-//         res.send(result, );
-//     }); 
-// });
 
 
 
