@@ -10,6 +10,7 @@ var authController = require("./controllers/authController");
 var reportController = require("./controllers/reportController");
 var orderController = require("./controllers/orderController");
 var deliveryController = require("./controllers/deliveryController");
+var productController = require("./controllers/productController");
 
 app.use(cors({
     origin: 'http://localhost:3000',
@@ -34,7 +35,7 @@ app.use("/api/order", orderController);
 
 app.use("/api/delivery", deliveryController);
 
-
+app.use("/api/variations", productController);
 
 
 

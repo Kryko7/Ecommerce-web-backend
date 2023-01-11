@@ -7,24 +7,25 @@ const connection = require("../services/db");
 
 router.get("/quaterly-sales-report", (req, res) => {
     const { year } = req.query;
-    connection.query(`SELECT
-                        pi.product_item_id as product_item_id,
-                        pi.product_name as product_name,
-                        SUM(CASE WHEN QUARTER(o.order_date) = 1 THEN oi.quantity ELSE 0 END) as q1_sales,
-                        SUM(CASE WHEN QUARTER(o.order_date) = 2 THEN oi.quantity ELSE 0 END) as q2_sales,
-                        SUM(CASE WHEN QUARTER(o.order_date) = 3 THEN oi.quantity ELSE 0 END) as q3_sales,
-                        SUM(CASE WHEN QUARTER(o.order_date) = 4 THEN oi.quantity ELSE 0 END) as q4_sales,
-                        SUM(oi.quantity) as total_sales 
-                    FROM shop_order o
-                    JOIN order_item oi ON oi.order_id = o.order_id
-                    JOIN product_item pi ON pi.product_item_id = oi.product_item_id
-                    WHERE YEAR(o.order_date) = ?
-                    GROUP BY product_item_id
-                    ORDER BY total_sales DESC`, [year], (err, result) => {
+    // connection.query(`SELECT
+    //                     pi.product_item_id as product_item_id,
+    //                     pi.product_name as product_name,
+    //                     SUM(CASE WHEN QUARTER(o.order_date) = 1 THEN oi.quantity ELSE 0 END) as q1_sales,
+    //                     SUM(CASE WHEN QUARTER(o.order_date) = 2 THEN oi.quantity ELSE 0 END) as q2_sales,
+    //                     SUM(CASE WHEN QUARTER(o.order_date) = 3 THEN oi.quantity ELSE 0 END) as q3_sales,
+    //                     SUM(CASE WHEN QUARTER(o.order_date) = 4 THEN oi.quantity ELSE 0 END) as q4_sales,
+    //                     SUM(oi.quantity) as total_sales 
+    //                 FROM shop_order o
+    //                 JOIN order_item oi ON oi.order_id = o.order_id
+    //                 JOIN product_item pi ON pi.product_item_id = oi.product_item_id
+    //                 WHERE YEAR(o.order_date) = ?
+    //                 GROUP BY product_item_id
+    //                 ORDER BY total_sales DESC`, [year], (err, result) => {
+        connection.query(`CALL quaterly_sales_report(?)`, [year], (err, result) => {
         if (err) throw err;
-        res.send(result, );
+        res.send(result[0], );
     
-                    });
+    });
 });
 
 router.get("/products-with-most-sales", (req, res) => {
@@ -45,17 +46,18 @@ router.get("/products-with-most-sales", (req, res) => {
 });
 
 router.get("/most-ordered-category", (req, res) => {
-    connection.query( `SELECT
-                        c.category_name, 
-                        SUM(oi.quantity) as total_quantity 
-                    FROM Category c 
-                    INNER JOIN product p ON c.ID = p.category_id 
-                    INNER JOIN product_item pi ON p.product_id = pi.prduct_id 
-                    INNER JOIN order_item oi ON pi.product_item_id = oi.product_item_id 
-                    GROUP BY c.category_name 
-                    ORDER BY total_quantity DESC `, (err, result) => {
+    // connection.query( `SELECT
+    //                     c.category_name, 
+    //                     SUM(oi.quantity) as total_quantity 
+    //                 FROM Category c 
+    //                 INNER JOIN product p ON c.ID = p.category_id 
+    //                 INNER JOIN product_item pi ON p.product_id = pi.prduct_id 
+    //                 INNER JOIN order_item oi ON pi.product_item_id = oi.product_item_id 
+    //                 GROUP BY c.category_name 
+    //                 ORDER BY total_quantity DESC `, (err, result) => {
+        connection.query( `CALL most_ordered_category()`, (err, result) => {
         if (err) throw err;
-        res.send(result, );
+        res.send(result[0], );
     
     });
 });

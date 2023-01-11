@@ -12,7 +12,7 @@ router.post('/delay', async(req, res) => {
     let deliveryDelay = 0;
     if (mainCity === "true" && inStock === "true"){
         deliveryDelay = 5;
-        orderStatus = "Processing-1"
+        orderStatus = 'Processing-1'
     } else if (mainCity === "true" && inStock === "false"){
         deliveryDelay = 8;
         orderStatus = "Processing-2"
