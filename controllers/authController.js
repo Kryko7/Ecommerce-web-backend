@@ -15,8 +15,9 @@ router.post('/signin', (req, res) => {
     (err, result) => {
         if (err) throw err;
         if(result.length > 0){
-            // create a session for the user
             req.session.email = email;
+            console.log(email);
+            console.log(req.session.email);
             const token = jwt.sign({email: email, isAdmin: result[0].role === 'admin'}, 'secret', {expiresIn: '1h'});
             //res.cookie('auth_token',token);
             res.send({message: 'Success', token: token, result: result});
@@ -27,9 +28,11 @@ router.post('/signin', (req, res) => {
 });
 
 router.get('/signout', (req, res) => {
-    if (req.session.email) {
+    if (req.session.email === req.body.email) {
         try {
             req.session.destroy();
+            //res.clearCookie('auth_token');
+            //res.clearCookie('user');
             res.send({message: 'Success'});
         }
         catch(err) {
@@ -41,6 +44,19 @@ router.get('/signout', (req, res) => {
     }
     
 });
+
+
+// router.get('/signout', (req, res) => {
+//     req.session.destroy((err) => {
+//         if(err) {
+//             res.send({message: 'Error'});
+//         } else {
+//             res.clearCookie('email');
+//             res.send({message: 'Success'});
+//         }
+//     });
+// });
+
 
 router.post('/signup', (req, res) => {
     const { firstName, lastName, email, password, laneAddress, city, telephoneNumber } = req.body;

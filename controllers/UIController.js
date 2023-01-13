@@ -17,7 +17,7 @@ router.get("/categories", (req, res) => {
 router.get("/:index", (req, res) => {
     const { index } = req.params;
     if (index === '0') {
-      connection.query('SELECT * FROM product_item', (err, result) => {
+      connection.query('SELECT * FROM product_item pi JOIN product p ON pi.prduct_id = p.product_id ', (err, result) => {
       if (err) throw err;
         res.send(result, );
     });
@@ -33,7 +33,7 @@ router.get("/:index", (req, res) => {
                         LEFT JOIN category c ON s.ID = c.parent_category_id
                         WHERE c.ID IS NOT NULL
                         ) 
-                        SELECT pi.*
+                        SELECT *
                         FROM product_item pi
                         JOIN product p ON pi.prduct_id = p.product_id
                         JOIN category c ON p.category_id = c.ID
