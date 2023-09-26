@@ -8,9 +8,12 @@ const session = require('express-session');
 var UIController = require("./controllers/UIController");
 var authController = require("./controllers/authController");
 var reportController = require("./controllers/reportController");
+var orderController = require("./controllers/orderController");
+var deliveryController = require("./controllers/deliveryController");
+var productController = require("./controllers/productController");
 
 app.use(cors({
-    origin: 'http://localhost:3000'
+    origin: 'http://localhost:3000',
 }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -19,6 +22,10 @@ app.use(session({
     secret: 'secret',
     resave: false,
     saveUninitialized: true,
+    cookie: {
+        secure: true,
+        maxAge: 60000
+    }
 }));
 
 
@@ -28,19 +35,11 @@ app.use("/api/auth", authController);
 
 app.use("/api/report", reportController)
 
-// app.get("/", (req, res) => {
-//     connection.query("SELECT * FROM product_item", (err, result) => {
-//         if (err) throw err;
-//         res.send(result, );
-//     }); 
-// });
+app.use("/api/order", orderController);
 
-// app.get("/test", (req, res) => {
-//     connection.query("SELECT * FROM product where category_id=3", (err, result) => {
-//         if (err) throw err;
-//         res.send(result, );
-//     }); 
-// });
+app.use("/api/delivery", deliveryController);
+
+app.use("/api/variations", productController);
 
 
 
